@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 
 from googleapiclient.discovery import build
 
@@ -24,4 +25,4 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        print(self.channel)
+        pprint(self.channel)
