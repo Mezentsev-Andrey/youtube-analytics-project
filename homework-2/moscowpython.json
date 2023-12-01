@@ -1,8 +1,8 @@
 {
     "title": "MoscowPython",
-    "channel_id": null,
+    "channel_id": "Новое название",
     "description": "Видеозаписи со встреч питонистов и джангистов в Москве и не только. :)\nПрисоединяйтесь: https://www.facebook.com/groups/MoscowDjango! :)",
-    "url": "https://www.youtube.com/channel/None",
+    "url": "https://www.youtube.com/channel/channel_id",
     "count_subscriberCount": "26800",
     "video_count": "725",
     "count_views": "2467763"
