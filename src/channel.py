@@ -12,7 +12,7 @@ class Channel:
     """
 
     # YT_API_KEY скопирован из гугла и вставлен в переменные окружения
-    api_key: str = os.getenv("YOUTUBE_API_KEY")
+    api_key: str = os.getenv("YOUTUBE_API_KEY")  # type: ignore
 
     # создан специальный объект для работы с API
     youtube = build("youtube", "v3", developerKey=api_key)
@@ -23,20 +23,14 @@ class Channel:
         подтягиваться по API.
         """
         self.__channel_id = channel_id
-        self.channel = (
-            self.youtube.channels()
-            .list(id=channel_id, part="snippet,statistics")
-            .execute()
-        )
+        self.channel = self.youtube.channels().list(id=channel_id, part="snippet,statistics").execute()
 
         self.title = self.channel["items"][0]["snippet"]["title"]
         self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
         self.url = f"https://www.youtube.com/channel/{self.__channel_id}"
         self.id = self.channel["items"][0]["id"]
         self.description = self.channel["items"][0]["snippet"]["description"]
-        self.subscriber_count = self.channel["items"][0]["statistics"][
-            "subscriberCount"
-        ]
+        self.subscriber_count = self.channel["items"][0]["statistics"]["subscriberCount"]
         self.view_count = self.channel["items"][0]["statistics"]["viewCount"]
 
     @property
@@ -46,28 +40,28 @@ class Channel:
         """
         return self.__channel_id
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Возвращает название канала и ссылку в удобном формате.
         :return: описание канала с ссылкой.
         """
         return f"{self.title} ({self.url})"
 
-    def __add__(self, other):
+    def __add__(self, other) -> int:
         """
         Складывает подписчиков двух каналов.
         :return: результат сложения подписчиков.
         """
         return int(self.subscriber_count) + int(other.subscriber_count)
 
-    def __sub__(self, other):
+    def __sub__(self, other) -> int:
         """
         Вычитает разность подписчиков двух каналов.
         :return: результат вычитания подписчиков.
         """
         return int(self.subscriber_count) - int(other.subscriber_count)
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         """
         Сравнивает подписчиков двух каналов.
         :return: True, если у первого канала меньше
@@ -75,7 +69,7 @@ class Channel:
         """
         return self.subscriber_count < other.subscriber_count
 
-    def __le__(self, other):
+    def __le__(self, other) -> bool:
         """
         Сравнивает подписчиков двух каналов.
         :return: True, если у первого канала меньше или
@@ -83,7 +77,7 @@ class Channel:
         """
         return self.subscriber_count <= other.subscriber_count
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         """
         Сравнивает подписчиков двух каналов.
         :return: True, если у первого канала больше подписчиков,
@@ -91,7 +85,7 @@ class Channel:
         """
         return self.subscriber_count > other.subscriber_count
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         """
         Сравнивает подписчиков двух каналов.
         :return: True, если у первого канала больше или
@@ -99,7 +93,7 @@ class Channel:
         """
         return self.subscriber_count >= other.subscriber_count
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         """
         Сравнивает подписчиков двух каналов.
         :return: True, если у обоих каналов одинаковое кол-во подписчиков,
@@ -139,5 +133,5 @@ class Channel:
             json.dump(channel_info, file, indent=4, ensure_ascii=False)
 
     @channel_id.setter
-    def channel_id(self, value):
+    def channel_id(self, value) -> None:
         self.__channel_id = value
