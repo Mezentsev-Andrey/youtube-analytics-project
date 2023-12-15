@@ -10,13 +10,34 @@ class Video:
     """
 
     def __init__(self, video_id: Any) -> None:
-        self.video_id = video_id
-        self.request = self.get_service().videos().list(part="snippet,contentDetails,statistics", id=self.video_id)
-        self.response = self.request.execute()
-        self.name = self.response["items"][0]["snippet"]["title"]
-        self.url = f"https://youtu.be/{self.video_id}"
-        self.view_count = self.response["items"][0]["statistics"]["viewCount"]
-        self.like_count = self.response["items"][0]["statistics"]["likeCount"]
+        try:
+            self.video_id = video_id
+            youtube = self.get_service()
+            self.video = (
+                youtube.videos()
+                .list(part="snippet,statistics,contentDetails,topicDetails", id=self.id_video)
+                .execute()
+            )
+            self.title = self.video["items"][0]["snippet"]["title"]
+            self.request = self.get_service().videos().list(part="snippet,contentDetails,statistics", id=self.video_id)
+            self.response = self.request.execute()
+            self.name = self.response["items"][0]["snippet"]["title"]
+            self.url = "https://www.youtube.com/watch?v=" + self.video_id
+            self.view_count = self.response["items"][0]["statistics"]["viewCount"]
+            self.like_count = self.response["items"][0]["statistics"]["likeCount"]
+        except Exception:
+            self.video_id = video_id
+            self.video = None
+            self.title = None
+            self.request = None
+            self.response = None
+            self.name = None
+            self.url = None
+            self.view_count = None
+            self.like_count = None
+
+    def __str__(self):
+        return f"{self.title}"
 
     @classmethod
     def get_service(cls) -> build:
@@ -26,12 +47,6 @@ class Video:
         channel_id = os.getenv("YOUTUBE_API_KEY")
         cls.youtube = build("youtube", "v3", developerKey=channel_id)  # type: ignore
         return build("youtube", "v3", developerKey=channel_id)
-
-    def __str__(self) -> str:
-        """
-        Возвращает названия видео.
-        """
-        return f"{self.name}"
 
 
 class PLVideo(Video):
